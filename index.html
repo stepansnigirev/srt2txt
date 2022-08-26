@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Subtitles to text</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+</head>
+<body>
+<input type="file" id="file"/>
+<a download="text.txt" style="display: none;" href="data:text/plain,nothing here." id="download"/>Download</a>
+<div id="text"></div>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function(){
+        const el = document.getElementById("file");
+        const output = document.getElementById('text');
+        const download = document.getElementById('download');
+
+        if (el != null) {
+            el.addEventListener("change", (e) => {
+                files = e.currentTarget.files;
+                console.log(files);
+                download.download = files[0].name.replace(".srt","")+".txt";
+                for(let i=0; i<1; i++){
+                    console.log(files[i].name);
+                    let reader = new FileReader();
+                    reader.onload = function(e) {
+                        let str = reader.result;
+                        console.log(str);
+                        let lines = str.split("\n\n");
+                        let lns = lines.map((line)=>{return line.split("\n").slice(2).join(" ");})
+                        let txt = lns.join(" ");
+                        output.innerText = txt;
+                        download.href = "data:text/plain,"+txt;
+                        download.style.display = "block";
+                    }
+                    reader.readAsText(files[i]);
+                }
+                el.value = null;
+            });
+        }
+    });
+</script>
+</body>
+</html>
