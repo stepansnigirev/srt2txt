@@ -28,7 +28,13 @@
                         let str = reader.result;
                         console.log(str);
                         let lines = str.split("\n\n");
-                        let lns = lines.map((line)=>{return line.split("\n").slice(2).join(" ");})
+                        let lns = lines.map((line)=>{
+                            if(line.includes("->")){
+                                return line.split("->")[1].split("\n").slice(1).join(" ");
+                            }else{
+                                return line.split("\n").slice(2).join(" ");
+                            }
+                        })
                         let txt = lns.join(" ");
                         output.innerText = txt;
                         download.href = "data:text/plain,"+txt;
